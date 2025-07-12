@@ -1,15 +1,12 @@
-import os
 import streamlit as st
-from dotenv import load_dotenv
 import google.generativeai as genai
 
-# Load environment variables
-load_dotenv()
-api_key = os.getenv("GEMINI_API_KEY")
+# Load Gemini API Key from Streamlit Secrets
+api_key = st.secrets["GEMINI_API_KEY"]
 
 # Check API key
 if not api_key:
-    st.error("❌ Gemini API key not found. Please set it in the .env file.")
+    st.error("❌ Gemini API key not found. Please set it in Streamlit secrets.")
     st.stop()
 
 # Configure Gemini API
@@ -26,8 +23,9 @@ languages = [
 st.set_page_config(page_title="🌐 Translator by Laiba", layout="centered")
 st.title("🌍 Language Translator")
 st.markdown("**Created by Laiba Ashfaq** — Translate your text into multiple languages effortlessly.")
-
 st.divider()
+
+# Input fields
 text_input = st.text_area("✏️ Enter the text you want to translate:", height=150)
 selected_language = st.selectbox("🌐 Select your desired language:", languages)
 submit = st.button("🔁 Translate")
@@ -41,22 +39,15 @@ if submit:
         try:
             model = genai.GenerativeModel("gemini-1.5-flash")
 
-            # Custom prompt for Roman Urdu / Roman English
+            # Create prompt based on selected language
             if selected_language == "Roman Urdu":
-                prompt = (
-                    f"Translate the following text to Urdu but write it in Roman Urdu using English alphabets only:\n\n{text_input}"
-                )
+                prompt = f"Translate the following text to Urdu but write it in Roman Urdu using English alphabets only:\n\n{text_input}"
             elif selected_language == "Roman English":
-                prompt = (
-                    f"Translate the following text to English and write it in Roman English using simple Latin script only:\n\n{text_input}"
-                )
+                prompt = f"Translate the following text to English and write it in Roman English using simple Latin script only:\n\n{text_input}"
             else:
-                prompt = (
-                    f"Translate the following text into {selected_language}. "
-                    f"Please reply only in the native {selected_language} script with no transliteration:\n\n{text_input}"
-                )
+                prompt = f"Translate the following text into {selected_language}. Please reply only in the native {selected_language} script with no transliteration:\n\n{text_input}"
 
-            # Generate and display response
+            # Generate and display the response
             response = model.generate_content(prompt)
             translated_text = response.text.strip()
 
