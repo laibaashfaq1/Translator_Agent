@@ -1,6 +1,3 @@
-# How to Run This Agent
-https://github.com/laibaashfaq1/Translator_Agent/blob/main/Translator/main.py
-
 # pip install openai-agents
 <!-- 🧠 Ye command `openai-agents` library install karti hai jo AI agents banane ke liye use hoti hai. 
 is library ke zariye ap AI workflows (jaise translators, assistants, etc.) easily design kar sakti ho. -->
